@@ -1,0 +1,37 @@
+{
+	"nodes":[
+		{
+			"id":"title",
+			"type":"text",
+			"text":"# Pattern 03 — Architecture",
+			"styleAttributes":{"textAlign":"center"},
+			"x":0,
+			"y":-1860,
+			"width":860,
+			"height":120,
+			"color":"4"
+		},
+		{"id":"s_refarch","type":"text","text":"**The reference architecture - three zones, one trust model**\n\nIDENTITY AND GATEWAY: identity provider issues tokens, gateway enforces auth, quota, rate limits, routing and logging. The only path to the model. Without it: no visibility, no kill switch, no audit trail.\n\nCORE PROCESSING:  application layer, prompt assembly (system prompt versioned, user input tagged, retrieved context tagged *UNTRUSTED*, provenance on every span), model call (pinned version, constrained decoding, step limits), response and output controls (schema validation, secret scan, groundedness, consumer). Trust boundary: model output validated before consumer.\n\nDATA AND TOOLS:  ACL service consulted at query time, retrieval index classified to highest ingested tier, knowledge sources access-controlled and fresh. Agentic extension: external tools with scoped short-lived credentials, state changes require human confirmation.\n\nAUDIT AND TELEMETRY runs beneath all three zones. All events, all components, all paths.","x":0,"y":-560,"width":860,"height":380,"color":"6"},
+		{"id":"problem","type":"text","text":"## Recurring Problem\n\nOrganisations apply classical security architecture patterns to AI systems and discover too late that the assumptions underpinning those patterns do not hold.\n\nThree assumptions break in every deployment:\n1. **Determinism**: you cannot test and sign off a control that produces different output on different runs.\n2. **Perimeter**: the attack surface has moved inside the data the model processes.\n3. **Authorisation**: ACLs control what was retrieved, not what the model chose to surface from what it read.\n\nA fourth breaks in agentic systems specifically: classical patterns assume systems that react to requests. Agentic systems plan, decide and act. The failure modes have no classical equivalent.","x":0,"y":-1680,"width":860,"height":340,"color":"1"},
+		{"id":"context","type":"text","text":"## Given Context\n\nApplies to any AI system moving toward production. The severity scales with architecture type: wrappers carry the lightest version of each problem, agentic systems carry the most acute version.\n\nThe hybrid rule: if any component of the system is agentic, the agentic controls apply to the whole system. Apply the controls of the highest complexity tier present - not just to the agentic part.","x":0,"y":-1300,"width":860,"height":220,"color":"3"},
+		{"id":"solution_head","type":"text","text":"## Reusable Solution\nCatalogue the architecture type. Apply the right review tier. Implement the reference architecture. Evidence the six controls.","x":0,"y":-1040,"width":860,"height":140,"color":"6"},
+		{"id":"s_types","type":"text","text":"**Three architecture types - each with its own risk profile and required controls**\n\nWrapper: direct API call, no retrieval, no state. Risks: fabrication, vendor data processing, direct injection. Key control: output schema and input bounds before the prompt.\n\nRAG system: retrieval-augmented generation. Risks: over-permissioned indexes, indirect injection via retrieved documents, vector store retention obligations. Key control: ACL-aware retrieval per user at query time.\n\nAgentic: multi-step planning with tool use. Risks: tool permission blast radius, accumulating sensitive state, irreversible actions. Key control: least privilege per tool, human confirmation on state change.","x":0,"y":-860,"width":860,"height":260,"color":"6"},
+		{"id":"s_six","type":"text","text":"**Six things that must be true before you ship - not a checklist, a gate**\n\n**01** A gateway that is the only path to the model. All tiers.\n**02** Authentication on every call, authorisation on every action - as the calling user, not the service account. All tiers.\n**03** Production isolated from experimentation - separate credentials, separate data, defined promotion gate. All tiers.\n**04** Trust boundaries enforced at every component boundary - retrieved content tagged as untrusted at assembly. RAG and Agentic.\n**05** Least privilege on every tool, short-lived credentials - worst-case blast radius is what the tool can reach. Agentic.\n**06** The model itself is a verified, inventoried dependency - provenance, signing, version pinning, supply-chain review before promotion. All tiers including third-party APIs.","x":0,"y":-140,"width":860,"height":340,"color":"6"},
+		{"id":"tradeoff","type":"text","text":"## What You Give Up\n\nAuthorisation-led design and ACL-aware retrieval add latency and engineering complexity. Per-user, per-request entitlement lookups are slower and harder to cache than broad index access. The performance cost is real and must be designed for - it is not an implementation detail.\n\nPinned model versions and signed artefacts reduce deployment flexibility. When a model provider releases a patch, you must go through a validation cycle before adopting it. Teams used to always using the latest version will find this friction.\n\nThe reference architecture is opinionated. It will conflict with existing patterns in organisations that have their own architecture standards. That conflict needs to be resolved explicitly, not avoided.","x":0,"y":240,"width":860,"height":320,"color":"1"},
+		{"id":"close","type":"text","text":"> Architecture governance is not a gate. It is a record.\nCatalogue what you have. Assess it. Implement the controls. Evidence them.\nThe inventory and the impact assessment are the output — not the approval email.","x":0,"y":600,"width":860,"height":144,"color":"4"}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"title","fromSide":"bottom","toNode":"problem","toSide":"top"},
+		{"id":"e2","fromNode":"problem","fromSide":"bottom","toNode":"context","toSide":"top"},
+		{"id":"e3","fromNode":"context","fromSide":"bottom","toNode":"solution_head","toSide":"top"},
+		{"id":"e4","fromNode":"solution_head","fromSide":"bottom","toNode":"s_types","toSide":"top"},
+		{"id":"e5","fromNode":"s_types","fromSide":"bottom","toNode":"s_refarch","toSide":"top"},
+		{"id":"e6","fromNode":"s_refarch","fromSide":"bottom","toNode":"s_six","toSide":"top"},
+		{"id":"e7","fromNode":"s_six","fromSide":"bottom","toNode":"tradeoff","toSide":"top"},
+		{"id":"e8","fromNode":"tradeoff","fromSide":"bottom","toNode":"close","toSide":"top"}
+	],
+	"metadata":{
+		"version":"1.0-1.0",
+		"frontmatter":{}
+	}
+}

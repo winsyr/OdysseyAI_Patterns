@@ -1,0 +1,72 @@
+{
+	"nodes":[
+		{
+			"id":"title",
+			"type":"text",
+			"text":"# Pattern 02 — Technical Guardrails",
+			"styleAttributes":{"textAlign":"center"},
+			"x":0,
+			"y":-1780,
+			"width":860,
+			"height":100,
+			"color":"4"
+		},
+		{"id":"problem","type":"text","text":"## Recurring Problem\n\nGuardrails are implemented once at deployment, treated as permanent and never re-evaluated. Models update, prompts change, inputs evolve and the threat landscape shifts - but the guardrail configuration does not move with them.\n\nThe result: a guardrail suite that was adequate at launch, silently degrades in coverage, and fails under conditions that did not exist when it was written. The failure is invisible until an incident surfaces it.","x":0,"y":-1620,"width":860,"height":240,"color":"1"},
+		{"id":"context","type":"text","text":"## Given Context\n\nApplies to any AI service in production that processes untrusted input or produces output used in decisions, recommendations or actions.","x":0,"y":-1340,"width":860,"height":160,"color":"3"},
+		{"id":"s_fail","type":"text","text":"**Fail direction - the decision that determines whether guardrails survive contact with delivery pressure**\n\nFail closed on deterministic controls: identity, input bounds, provenance tagging, retrieval ACLs, tool authorisation, output schema validation. These are never wrong. Blocking on them is safe.\n\nFail open on probabilistic controls: injection classifiers, groundedness scoring, policy classifiers, judge-model review. These are sometimes wrong. Block on them and you block legitimate traffic. Block legitimate traffic and the guardrail gets switched off. Then you lose both the control and the telemetry. Block only if assessed as a negative impact - and ensure monitoring and alerting is on and working.","x":0,"y":-560,"width":410,"height":480,"color":"6"},
+		{"id":"s_sdlc","type":"text","text":"**The gate ladder - five gates, each with a trigger and a fail action**\n\nREGISTER: no endpoint provisioned without a record\nASSESS: cannot leave the sandbox until complete\nBUILD:  pipeline fails on unapproved model, unsigned artefact or licence gap\nPROVE:  release blocked until evaluation passes and no regressions introduced\nRUN:  owner paged on drift or abuse, rollback path defined and tested\n\nEvery production failure is promoted into the eval corpus and becomes a permanent regression test. The suite gets harder to beat every time it is beaten. Without that loop it is a one-time gate that ages.","x":430,"y":-560,"width":430,"height":480,"color":"6"},
+		{"id":"s_blind","type":"text","text":"**Three failures no tuning will fix - structural problems, not configuration problems**\n\nInput classifiers run before retrieval. Indirect injection arrives inside fetched content after the classifier has already passed the request. Fix: tag retrieved spans as untrusted at assembly. Apply heuristics to those spans specifically.\n\nOutput filters run after the action. If the tool already executed, filtering the response does not undo it. Fix: authorise at the tool call. Human confirmation on state-changing operations.\n\nOver-permissioned retrieval cannot be fixed at the edge. No rule is being broken. Fix: filter at query time using the source system's ACLs, per user, per request.","x":0,"y":0,"width":860,"height":260,"color":"1"},
+		{"id":"tradeoff","type":"text","text":"## What You Give Up\n\nContinuous evaluation in CI adds build time, cost and maintenance burden. Every adversarial test suite must be kept current against the model version it tests. A stale eval suite is worse than no eval suite - it provides false assurance and masks the actual coverage gap.\n\nThe gate ladder also creates a hard dependency between security evidence and release velocity. Teams that cannot produce evidence cannot ship. That is the point - but it requires the evidence-production process to be fast, documented and not dependent on a single person.","x":0,"y":300,"width":860,"height":240,"color":"1"},
+		{"id":"solution_head","type":"text","text":"## Reusable Solution\nSecurity controls first. AI guardrails on top. Each layer enforces what the others cannot.","x":0,"y":-1140,"width":860,"height":120,"color":"6"},
+		{"id":"s_layers","type":"text","text":"**Three layers in order - skip one and the others compensate for it indefinitely**\n\nLayer 1: Security controls. Identity and authentication, authorisation and RBAC, network and perimeter, encryption, logging and monitoring. These exist before AI is in the picture. AI inherits them. A guardrail applied to a service with no identity control protects nothing.\n\nLayer 2:  Architecture controls. Context provenance, ACL-aware retrieval, tool scoping, constrained output. Design-time decisions that enforce what runtime filters cannot reach.\n\nLayer 3:  AI guardrails. Input validation, injection detection, output sanitisation, groundedness scoring. Runtime. Probabilistic. Observe and alert.\n\n(Add your own controls, architecture principles and guardrails)","x":0,"y":-980,"width":860,"height":320,"color":"6"},
+		{"id":"close","type":"text","text":"> Guardrails without controls are decoration. Controls without guardrails leave the AI-specific surface unaddressed.\nThe gate ladder only holds if the evidence it demands can actually be produced — build that capability before you mandate the gate.","x":0,"y":580,"width":860,"height":140,"color":"4"}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"title","fromSide":"bottom","toNode":"problem","toSide":"top"},
+		{"id":"e2","fromNode":"problem","fromSide":"bottom","toNode":"context","toSide":"top"},
+		{"id":"e3","fromNode":"context","fromSide":"bottom","toNode":"solution_head","toSide":"top"},
+		{"id":"e4","fromNode":"solution_head","fromSide":"bottom","toNode":"s_layers","toSide":"top"},
+		{
+			"id":"e5",
+			"fromFloating":false,
+			"styleAttributes":{"pathfindingMethod":"square"},
+			"fromNode":"s_layers",
+			"fromSide":"bottom",
+			"toNode":"s_fail",
+			"toSide":"top"
+		},
+		{
+			"id":"e6",
+			"fromFloating":false,
+			"styleAttributes":{"pathfindingMethod":"square"},
+			"fromNode":"s_layers",
+			"fromSide":"bottom",
+			"toNode":"s_sdlc",
+			"toSide":"top"
+		},
+		{
+			"id":"e7",
+			"toFloating":false,
+			"styleAttributes":{"pathfindingMethod":"square"},
+			"fromNode":"s_fail",
+			"fromSide":"bottom",
+			"toNode":"s_blind",
+			"toSide":"top"
+		},
+		{
+			"id":"e8",
+			"toFloating":false,
+			"styleAttributes":{"pathfindingMethod":"square"},
+			"fromNode":"s_sdlc",
+			"fromSide":"bottom",
+			"toNode":"s_blind",
+			"toSide":"top"
+		},
+		{"id":"e9","fromNode":"s_blind","fromSide":"bottom","toNode":"tradeoff","toSide":"top"},
+		{"id":"e10","fromNode":"tradeoff","fromSide":"bottom","toNode":"close","toSide":"top"}
+	],
+	"metadata":{
+		"version":"1.0-1.0",
+		"frontmatter":{}
+	}
+}

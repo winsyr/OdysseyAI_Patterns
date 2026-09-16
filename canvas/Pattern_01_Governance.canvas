@@ -1,0 +1,82 @@
+{
+	"nodes":[
+		{
+			"id":"title",
+			"type":"text",
+			"text":"# Pattern 01: Governance",
+			"styleAttributes":{"textAlign":"center"},
+			"x":0,
+			"y":-1600,
+			"width":860,
+			"height":60,
+			"color":"4"
+		},
+		{"id":"problem","type":"text","text":"## Recurring Problem\n\nAI systems get built and operated before any governance function knows they exist. Teams choose models, process sensitive data and expose capabilities to users with no ownership record and no risk assessment. By the time a review happens the system is in production. Remediation at that point costs ten times what governance at intake would have cost.\n\nThis is not a compliance failure. It is a visibility failure. You cannot govern what you cannot see.","x":0,"y":-1520,"width":860,"height":180,"color":"1"},
+		{"id":"s_intake","type":"text","text":"**Step 1: Use Case Registration**\nSix fields. Self-service. Two minutes.\n\nTechnology owner - named escalation path\nData owner - drives risk tier and permitted hosting regions\nUse case owner - accountable for behaviour and outcomes\nAutonomy level - read, advisory or write actions\nExposure - internal, customer-facing or public\nDecision impact - what the model can influence or change\n\n**The enforcement point is provisioning, not the form**\n\nNo registration record means no gateway route, no credentials and no model endpoint. The form has no teeth. The key issuance is the control.","x":0,"y":-888,"width":410,"height":488,"color":"6"},
+		{"id":"s_enforce","type":"text","text":"**Step 2: Data Use Forum**\nApprove the data for usage before the model sees it.\n\nPrivacy, Legal, Contracts, Data Governance, Records and Security each hold one question at the table. One meeting. Three outcomes: Approved, Approved with Conditions, Not Approved. Each outcome named and owned. Decision recorded against the use case ID and fed into the impact assessment.","x":430,"y":-888,"width":430,"height":288,"color":"6"},
+		{"id":"context","type":"text","text":"## Given Context\n\nApplies when more than one team builds or consumes AI capabilities, and when those capabilities process anything beyond fully public data.","x":0,"y":-1300,"width":860,"height":140,"color":"3"},
+		{
+			"id":"solution_head",
+			"type":"text",
+			"text":"## Reusable Solution\nOne intake for every AI use case. Provisioning is the enforcement point.",
+			"styleAttributes":{
+				"textAlign":null
+			},
+			"x":0,
+			"y":-1120,
+			"width":860,
+			"height":120,
+			"color":"6"
+		},
+		{"id":"s_impact","type":"text","text":"**Step 3: Impact Assessment**\nThree inputs. One residual risk rating. Baseline must be complete before any rating is produced.\n\nA: Inherent AI risk scored across ten factors. Any high-risk trigger (sensitive data, external users, write access, agentic behaviour) classifies the use case as HIGH regardless of the other scores.\n\nB: Critical guardrail gates (add your guardrails). Mandatory. Not a menu. Incomplete set returns the use case. It is never rated without the full baseline.\n\nC: Standard compensating controls scored on evidence maturity. A control counts as in place only once it has been tested with successful results. Implemented is not in place. That is where most self-assessments quietly award full marks.","x":0,"y":-320,"width":860,"height":300,"color":"6"},
+		{"id":"tradeoff","type":"text","text":"## What You Give Up\n\nThe front door adds friction to every new use case. Teams that could previously start in an afternoon now have a registration step. If registration is slow, teams route around it - which defeats the entire pattern.\n\nSpeed of the governed path is not a nice-to-have. It is a correctness condition. A front door that takes two weeks is a front door nobody uses. The pattern only works when going through it is faster than going around it.","x":0,"y":40,"width":860,"height":220,"color":"1"},
+		{"id":"close","type":"text","text":"> Governance does not slow AI adoption. Undocumented AI slows it — when the audit finds it, the remediation does.\nBuild the door before you need to explain why there is no record.","x":0,"y":320,"width":860,"height":120,"color":"4"}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"title","fromSide":"bottom","toNode":"problem","toSide":"top"},
+		{"id":"e2","fromNode":"problem","fromSide":"bottom","toNode":"context","toSide":"top"},
+		{"id":"e3","fromNode":"context","fromSide":"bottom","toNode":"solution_head","toSide":"top"},
+		{
+			"id":"e4",
+			"fromFloating":false,
+			"styleAttributes":{"pathfindingMethod":"square"},
+			"fromNode":"solution_head",
+			"fromSide":"bottom",
+			"toNode":"s_intake",
+			"toSide":"top"
+		},
+		{
+			"id":"e5",
+			"fromFloating":false,
+			"styleAttributes":{"pathfindingMethod":"square"},
+			"fromNode":"solution_head",
+			"fromSide":"bottom",
+			"toNode":"s_enforce",
+			"toSide":"top"
+		},
+		{
+			"id":"e6",
+			"toFloating":false,
+			"styleAttributes":{"pathfindingMethod":"square"},
+			"fromNode":"s_intake",
+			"fromSide":"bottom",
+			"toNode":"s_impact",
+			"toSide":"top"
+		},
+		{
+			"id":"e7",
+			"toFloating":false,
+			"styleAttributes":{"pathfindingMethod":"square"},
+			"fromNode":"s_enforce",
+			"fromSide":"bottom",
+			"toNode":"s_impact",
+			"toSide":"top"
+		},
+		{"id":"e8","fromNode":"s_impact","fromSide":"bottom","toNode":"tradeoff","toSide":"top"},
+		{"id":"e9","fromNode":"tradeoff","fromSide":"bottom","toNode":"close","toSide":"top"}
+	],
+	"metadata":{
+		"version":"1.0-1.0",
+		"frontmatter":{}
+	}
+}

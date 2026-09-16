@@ -1,0 +1,39 @@
+{
+	"nodes":[
+		{
+			"id":"title",
+			"type":"text",
+			"text":"# Pattern 04: Usage and Scale",
+			"styleAttributes":{"textAlign":"center"},
+			"x":0,
+			"y":-1920,
+			"width":860,
+			"height":100,
+			"color":"4"
+		},
+		{"id":"solution_head","type":"text","text":"## Reusable Solution\nCentralise controls once as shared services. Make registration the thing that buys teams speed, not the thing that slows them down.","x":0,"y":-1268,"width":860,"height":36,"color":"6"},
+		{"id":"problem","type":"text","text":"## Recurring Problem\n\nAs AI adoption grows, each team duplicates the same security controls - gateway, guardrails, registry, evaluation -  in slightly different and incompatible ways. The estate becomes ungovernable because no function has visibility across all of it.\n\nThe controls exist. They are just in the wrong place. Each team maintains its own copy, tuned to its own traffic, tested against its own cases. A finding fixed in one team's implementation is not fixed in any other. An unapproved model blocked in one gateway is available through the next. At fifty use cases, the security programme is fifty separate programmes - each invisible to the others.","x":0,"y":-1780,"width":860,"height":296,"color":"1"},
+		{"id":"context","type":"text","text":"## Given Context\n\nApplies at the point where more than one team builds AI capabilities independently and without shared infrastructure.\n\nBelow that threshold - a single team, a single system - shared services are premature and add coordination cost without benefit. The pattern is worth considering when the second team starts building. It is urgent when the fifth team starts building without knowing the first four exist.","x":0,"y":-1440,"width":860,"height":224,"color":"3"},
+		{"id":"s_services","type":"text","text":"**Four shared services - the capability matters, not the product that provides it**\n\nModel gateway - single enforcement point for identity, quota, routing and logging. Every request passes through it. Without it there is no visibility, no kill switch and no honest adoption metric. Measure adoption by the share of AI traffic routed through this gateway. 100% is the only acceptable number.\n\nGuardrail service - input and output controls tuned centrally against real traffic. A guardrail inherited by fifty use cases is fifty times better tested than one configured per team. A finding fixed once propagates everywhere that inherits the service.\n\nRegistry and catalogue - every model, version, licence position and support state in one record. Queried by CI directly. The inventory the impact assessment reads from. The record that triggers retirement when a model reaches end of life.\n\nEvaluation harness - shared adversarial suites running in CI. Golden datasets, sanctioned sandbox, reference patterns as code. A case fixed once propagates to every use case that inherits the suite.","x":0,"y":-1180,"width":860,"height":400,"color":"6"},
+		{"id":"s_roles","type":"text","text":"**Operating model - who owns what, and what they explicitly do not own** (Build your own for your context)\n\n**Platform team**: owns the paved road: gateway, guardrail service, registry, eval harness and gates. Does not own use case delivery.\n**Development team**:  owns incident response, testing, risk and compliance to standards. Does not own the platform or the security methodologies.\n**Security function**: owns standards, threat models, adversarial testing and incident response. Does not sign off every use case by hand.\n**Use case owner**: owns the system, its evaluations, its monitoring and its retirement. Does not build its own guardrails or model catalogue.\n**Data and privacy**: owns classification, retention and impact assessment method. Not the queue every project waits in.\n**Risk and audit**: own assurance over the gates and the evidence they emit. Not manual evidence collection.\n\nThe not-own column is where most operating model failures live. State it explicitly.","x":0,"y":-740,"width":860,"height":400,"color":"6"},
+		{"id":"s_consume","type":"text","text":"**Consumption controls - cost, capacity and efficiency are security controls**\n\n**Bound it**: per-identity and per-use-case budgets, rate limits at the gateway, step and depth limits on agents. Unbounded agents will run to timeout or budget. Neither is acceptable in production.\n\n**Right-size it**:  small model by default, escalate on demonstrated need. Measure cost per outcome, not per call. Distil where volume justifies it.\n\n**Avoid it**:  cache aggressively, batch what does not need to be live, ask whether it needs a model at all. The right answer is sometimes a lookup, a rule or a search.","x":0,"y":-300,"width":860,"height":280,"color":"6"},
+		{"id":"s_measure","type":"text","text":"**The four honest metrics - 100% is the only acceptable number**\n\n1. **Traffic via gateway**: the only honest adoption metric. Shadow AI exists where the gateway does not see it.\n2. **Use cases registered**: measured against discovered, not declared. Discovery comes from egress, spend and contract data.\n3. **Guardrails active on each PR**:  testing coverage. A release without active guardrails is not a release.\n4. **Releases with eval run**:  assurance that is actually continuous. An eval that does not run in CI is an eval that does not run.","x":0,"y":20,"width":860,"height":220,"color":"6"},
+		{"id":"tradeoff","type":"text","text":"## What You Give Up\n\nThe platform team becomes a shared dependency. Teams building on the paved road move faster on average but lose flexibility - they cannot easily use a model, a hosting region or a deployment pattern the platform does not yet support.\n\nGovernance via the platform only works if the platform is maintained and the team running it is resourced. An under-resourced platform team creates the bottleneck it was built to prevent. If the platform cannot support a new use case in a reasonable time, teams route around it - and you are back to the original problem.\n\nThe 100% metrics create hard accountability. A team that cannot demonstrate all traffic going through the gateway has a finding. Some teams will resist that accountability. That resistance needs to be treated as a risk acceptance decision, not as a gap in the metric.","x":0,"y":280,"width":860,"height":340,"color":"1"},
+		{"id":"close","type":"text","text":"> One good system is an anecdote. A paved road is a capability.\nThe difference is whether the controls live in each use case or underneath all of them.\nThe platform team is a product team. Treat it like one - with a roadmap, a backlog and a user.","x":0,"y":660,"width":860,"height":144,"color":"4"}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"title","fromSide":"bottom","toNode":"problem","toSide":"top"},
+		{"id":"e2","fromNode":"problem","fromSide":"bottom","toNode":"context","toSide":"top"},
+		{"id":"e3","fromNode":"context","fromSide":"bottom","toNode":"solution_head","toSide":"top"},
+		{"id":"e4","fromNode":"solution_head","fromSide":"bottom","toNode":"s_services","toSide":"top"},
+		{"id":"e5","fromNode":"s_services","fromSide":"bottom","toNode":"s_roles","toSide":"top"},
+		{"id":"e6","fromNode":"s_roles","fromSide":"bottom","toNode":"s_consume","toSide":"top"},
+		{"id":"e7","fromNode":"s_consume","fromSide":"bottom","toNode":"s_measure","toSide":"top"},
+		{"id":"e8","fromNode":"s_measure","fromSide":"bottom","toNode":"tradeoff","toSide":"top"},
+		{"id":"e9","fromNode":"tradeoff","fromSide":"bottom","toNode":"close","toSide":"top"}
+	],
+	"metadata":{
+		"version":"1.0-1.0",
+		"frontmatter":{}
+	}
+}
