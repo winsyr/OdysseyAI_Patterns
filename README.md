@@ -1,9 +1,20 @@
-# AI Security Design Patterns
+# OdysseyAI Patterns
 
-## Architecture Security
-![Architecture Security](images/Architecture_Security.png)
+AI security design patterns covering governance, guardrails, architecture and scale.
 
-Source: [`canvas/Architecture_Security.canvas`](canvas/Architecture_Security.canvas). Open it in Obsidian to edit.
+Editable sources are in [`canvas/`](canvas/). Open them in Obsidian.
+
+## 01 · Governance
+![Governance](images/Pattern_01_Governance.png)
+
+## 02 · Technical Guardrails
+![Technical Guardrails](images/Pattern_02_TechnicalGuardrails.png)
+
+## 03 · Architecture
+![Architecture](images/Pattern_03_Architecture.png)
+
+## 04 · Usage & Scale
+![Usage and Scale](images/Pattern_04_UsageAndScale.png)
 
 ---
 
@@ -13,7 +24,7 @@ You're welcome to use, share and adapt these patterns in your own work, whether 
 
 **Attribution is required.** Please credit:
 
-> Ryan Winstanley, *OdysseyAI Patterns*, https://github.com/<your-username>/OdysseyAI_Patterns
+> Ryan Winstanley, *OdysseyAI Patterns*, https://github.com/winsyr/OdysseyAI_Patterns
 
 **Please use sensibly:**
 - Don't present this work as your own
